@@ -11,11 +11,11 @@ layout(shared)uniform frameData
   vec4 cameraPos;
   mat4x4 projectionMatrix;  
 };
-/*
+
 layout(shared)uniform objectData
 {
-  mat4x4 objectMatrix;
-};*/
+  vec4 boundingSphere;
+};
 
 out vec4 vsPosition;
 out vec4 vsColour;

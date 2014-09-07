@@ -43,13 +43,12 @@ typedef struct
 
 typedef struct
 {
-  glm::mat4 transformMatrix;
-  glm::mat4 boneMatrices[64];
+  glm::vec4 boundingSphere;
 } ObjectData;
 
 // Check that the above structs are the right size
 static_assert(sizeof(VertexDatum) == sizeof(GLfloat) * 16, "VertexDatum incorrect size");
-static_assert(sizeof(ObjectData) == sizeof(GLfloat) * (16+64*16), "ObjectData incorrect size");
+static_assert(sizeof(ObjectData) == sizeof(GLfloat) * (4), "ObjectData incorrect size");
 
 /// \brief An object is anything that occurs in the game space
 ///
@@ -87,6 +86,10 @@ class Object
     int numberOfPoints;
     /// Is this object billboarded (always facing the camera)?
     bool billboard;
+    /// The bounding box min coordinate
+    glm::vec3 bboxMin;
+    /// The bounding box max coordinate
+    glm::vec3 bboxMax;
     /// A testing number for slew
     float xySlew;
     /// Initialise the triangle and position datas

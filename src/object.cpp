@@ -30,6 +30,8 @@ Object::Object(glm::vec3 pos,Game* g)
   glGenBuffers(1, &objectBO);
   VAO = (GLuint)-1;
   updateMatrix();
+  bboxMin = glm::vec3(100000.f);
+  bboxMax = glm::vec3(-100000.f);
 }
 
 /// Frees the data used by this object (esp the buffers in the GPU)
@@ -124,6 +126,14 @@ void Object::addPoint(int i,glm::vec3 point,glm::vec3 normal, glm::vec4 col)
 	vertexData[i].normal = normal;
 	vertexData[i].colour = col;
   vertexData[i].texMix = glm::vec4(-1);
+
+  bboxMin.x = glm::min(bboxMin.x,point.x);
+  bboxMin.y = glm::min(bboxMin.y,point.y);
+  bboxMin.z = glm::min(bboxMin.z,point.z);
+  bboxMax.x = glm::max(bboxMax.x,point.x);
+  bboxMax.y = glm::max(bboxMax.y,point.y);
+  bboxMax.z = glm::max(bboxMax.z,point.z);
+
 }
 
 
@@ -162,8 +172,10 @@ void Object::pushTriangleData()
 	// ... and blit the data in.
   glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER, numberOfTriangles*3*sizeof(int),triDat,GL_STATIC_DRAW);
   updateVAO();
-	// Finally set the variables that need setting
+	// Set the variables that need setting
 	buffersInitialised = true;
+  objectData.boundingSphere = glm::vec4((bboxMin+bboxMax)/2.f,glm::length(bboxMin-bboxMax)/2);
+  updateObjectBO();
 }
 
 void Object::updateVAO()
@@ -217,10 +229,10 @@ void Object::rotate(glm::vec3 basisX,glm::vec3 basisY)
 void Object::updateMatrix()
 {
   // This works.  You can check it yourself.
-  objectData.transformMatrix = glm::mat4(glm::vec4(forward,0),
+  /*objectData.transformMatrix = glm::mat4(glm::vec4(forward,0),
                                          glm::vec4(up,0) + glm::vec4(xySlew,0,0,0),
                                          glm::vec4(right,0),
-                                         glm::vec4(position,1));
+                                         glm::vec4(position,1));*/
   updateObjectBO();
 }
 

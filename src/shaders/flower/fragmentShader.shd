@@ -12,11 +12,10 @@ layout(shared)uniform frameData
   mat4x4 projectionMatrix;  
 };
 
-/*
 layout(shared)uniform objectData
 {
-  mat4x4 objectMatrix;
-};*/
+  vec4 boundingSphere;
+};
 
 void main()
 {

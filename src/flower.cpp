@@ -59,7 +59,7 @@ void Flower::Render()
 {
   game->shaderManager->loadShader(shaderID);
   // Load our transformation matrix etcqq
-  //game->shaderManager->getCurrentShader()->setObjectData(objectBO);
+  game->shaderManager->getCurrentShader()->setObjectData(objectBO);
   glBindVertexArray(VAO);
 
   glDrawArrays(GL_POINTS,0,200+10*30);
