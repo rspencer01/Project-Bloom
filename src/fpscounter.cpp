@@ -40,7 +40,7 @@ float getFrameDiff()
 {
   if (fps==0.f)
     return 1;
-  return min(1.f,1.f/fps);
+  return 1.f/fps;
 }
 
 /// Gets the number of frames per second, on average
