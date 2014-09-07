@@ -9,6 +9,7 @@
 #define CAMERA_H
 class Camera;
 #include <window.h>
+#include <object.h>
 
 /// A class that renders the scene according to some camera position and rotation
 ///
@@ -59,6 +60,7 @@ class Camera
     void getInputFromWindow(Window*);
     /// Controls the zoom on a object
     void zoomIn(float);
+    Object* attachment;
 };
 
 #endif

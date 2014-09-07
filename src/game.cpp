@@ -1,6 +1,7 @@
 #include <game.h>
 #include <log.h>
 #include <fpscounter.h>
+#include <noise.h>
 
 Game* currentGame;
 void error_callback(int error, const char* description){loge.log("GLFW Error: %s",description);}
@@ -30,12 +31,18 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 /// @param doGraphics Should this game initialise graphics?
 Game::Game()
 {
-  logi.log("Initialising Graphics");
+  logi.log("Initialising Graphics...");
   initGraphics();
   logi.log("Done");
+  logi.log("Initialising Noise...");
+  initNoise();
+  logi.log("Done");
+  flower = new Flower(this);
+  camera->attachment = flower;
   mouseCameraControl = false;
   currentGame = this;
   for (int i = 0;i<256;i++)keys[i] =false;
+
 }
 
 glm::vec2 oldMousePos;
@@ -60,12 +67,13 @@ void Game::initGraphics()
   glPointSize(2);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-  glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+  glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
   shaderManager = new ShaderManager(); 
   camera = new Camera(&shaderManager->frameData.cameraMatrix,&shaderManager->frameData.cameraPosition);
   camera->setPosition(glm::vec3(-5,0,0));
   oldMousePos = mainWindow->getSize()/2.f;
+
 }
 
 /// Run the game
@@ -101,6 +109,7 @@ void Game::renderMainWindow(float ms)
   glClearColor(0.,0.,0.,1.0);
   camera->Render();
   shaderManager->setFrameData();
+  flower->Render();
 }
 
 void Game::key(int key, int scancode, int action, int mods)

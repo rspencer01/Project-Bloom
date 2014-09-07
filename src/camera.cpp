@@ -20,8 +20,8 @@ Camera::Camera(glm::mat4* matrix, glm::vec4* position)
   matrixData = matrix;
   positionData = position;
   // What are we attaching to
-  //attachment = NULL;
-  //followingDistance = 10.f;
+  attachment = NULL;
+  followingDistance = 10.f;
 }
 
 /// Modifys the game world transform to reflect the postion of the camera.
@@ -35,10 +35,10 @@ void Camera::Render()
   UpVector = glm::normalize(UpVector);
   ViewDir = glm::normalize(ViewDir);
 
-  /*if (attachment!=NULL)
+  if (attachment!=NULL)
   {
     Position = (10.f*Position + (attachment->getPosition() - followingDistance*ViewDir))/11.f;
-  }*/
+  }
 
   // Construct a matrix that transforms the object in the correct way
   *matrixData = glm::lookAt(Position,Position+ViewDir,UpVector);

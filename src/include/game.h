@@ -11,6 +11,7 @@
 
 #include <window.h>
 #include <camera.h>
+#include <flower.h>
 #include <shaders.h>
 
 /// The `Game` class contains all the methods to do with gameplay.
@@ -32,6 +33,8 @@ class Game
     bool mouseCameraControl;
     /// Which keys are down
     bool keys[256];
+    /// A sample flower
+    Flower* flower;
   public:
     /// Creates a game instance and initialises all variables.
     Game();

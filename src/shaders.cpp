@@ -25,24 +25,24 @@ int ShaderManager::newShader(const char* name,int types)
   char path[80]={0};
   if (types&VERTEX_SHADER)
   {
-    strcpy(path,"./shaders/");strcat(path,name);strcat(path,"/vertexShader.shd");
+    strcpy(path,"../../shaders/");strcat(path,name);strcat(path,"/vertexShader.shd");
     shaders[numShaders]->LoadShader(path,GL_VERTEX_SHADER);
   }
   if (types&GEOMETRY_SHADER)
   {
-    strcpy(path,"./shaders/");strcat(path,name);strcat(path,"/geometryShader.shd");
+    strcpy(path,"../../shaders/");strcat(path,name);strcat(path,"/geometryShader.shd");
     shaders[numShaders]->LoadShader(path,GL_GEOMETRY_SHADER);
   }
   if (types&TESSELATION_SHADER)
   {
-    strcpy(path,"./shaders/");strcat(path,name);strcat(path,"/tesselationControlShader.shd");
+    strcpy(path,"../../shaders/");strcat(path,name);strcat(path,"/tesselationControlShader.shd");
     shaders[numShaders]->LoadShader(path,GL_TESS_CONTROL_SHADER);
-    strcpy(path,"./shaders/");strcat(path,name);strcat(path,"/tesselationEvaluationShader.shd");
+    strcpy(path,"../../shaders/");strcat(path,name);strcat(path,"/tesselationEvaluationShader.shd");
     shaders[numShaders]->LoadShader(path,GL_TESS_EVALUATION_SHADER);
   }
   if (types&FRAGMENT_SHADER)
   {
-    strcpy(path,"./shaders/");strcat(path,name);strcat(path,"/fragmentShader.shd");
+    strcpy(path,"../../shaders/");strcat(path,name);strcat(path,"/fragmentShader.shd");
     shaders[numShaders]->LoadShader(path,GL_FRAGMENT_SHADER);
   }
   shaders[numShaders]->CompileAll();
@@ -88,29 +88,30 @@ void ShaderManager::reloadAll()
     char path[80]={0};
     if (stypes[i]&VERTEX_SHADER)
     {
-      strcpy(path,"./shaders/");strcat(path,name);strcat(path,"/vertexShader.shd");
+      strcpy(path,"../../shaders/");strcat(path,name);strcat(path,"/vertexShader.shd");
       shaders[i]->LoadShader(path,GL_VERTEX_SHADER);
     }
     if (stypes[i]&GEOMETRY_SHADER)
     {
-      strcpy(path,"./shaders/");strcat(path,name);strcat(path,"/geometryShader.shd");
+      strcpy(path,"../../shaders/");strcat(path,name);strcat(path,"/geometryShader.shd");
       shaders[i]->LoadShader(path,GL_GEOMETRY_SHADER);
     }
     if (stypes[i]&TESSELATION_SHADER)
     {
-      strcpy(path,"./shaders/");strcat(path,name);strcat(path,"/tesselationControlShader.shd");
+      strcpy(path,"../shaders/");strcat(path,name);strcat(path,"/tesselationControlShader.shd");
       shaders[i]->LoadShader(path,GL_TESS_CONTROL_SHADER);
-      strcpy(path,"./shaders/");strcat(path,name);strcat(path,"/tesselationEvaluationShader.shd");
+      strcpy(path,"../../shaders/");strcat(path,name);strcat(path,"/tesselationEvaluationShader.shd");
       shaders[i]->LoadShader(path,GL_TESS_EVALUATION_SHADER);
     }
     if (stypes[i]&FRAGMENT_SHADER)
     {
-      strcpy(path,"./shaders/");strcat(path,name);strcat(path,"/fragmentShader.shd");
+      strcpy(path,"../../shaders/");strcat(path,name);strcat(path,"/fragmentShader.shd");
       shaders[i]->LoadShader(path,GL_FRAGMENT_SHADER);
     }
     shaders[i]->CompileAll();
     shaders[i]->Load();
   }
+  currentShader = -1;
 }
 
 
@@ -180,7 +181,7 @@ void ShaderProgram::LoadShader(const char* shaderPath, GLenum shaderType)
   {
     GLchar InfoLog[1024];
     glGetShaderInfoLog(ShaderObj, 1024, NULL, InfoLog);
-    loge.log("Error compiling shader",shaderPath, InfoLog);
+    loge.log("Error compiling shader %s %s",shaderPath, InfoLog);
   }
   // Attach the compiled object to the program
   glAttachShader(ShaderProgramID, ShaderObj);
@@ -197,6 +198,7 @@ void ShaderProgram::CompileAll()
   glBindAttribLocation(ShaderProgramID,4,"inTexShades");
   // Link the program
   glLinkProgram(ShaderProgramID);
+
   // If there is an error...
   GLint Success = 0;
   glGetProgramiv(ShaderProgramID, GL_LINK_STATUS, &Success);
@@ -216,6 +218,8 @@ void ShaderProgram::CompileAll()
     glGetProgramInfoLog(ShaderProgramID, sizeof(ErrorLog), NULL, ErrorLog);
     loge.log("Invalid shader program:", ErrorLog);
   }
+
+
 }
 
 /// Load the program into GPU memory, ready to be run
@@ -223,10 +227,6 @@ void ShaderProgram::Load()
 {
   // Now load this program
   glUseProgram(ShaderProgramID);
-  // Set the uniform samplers
-  setInt("heightmap",0);
-  setInt("colourTexture",1);
-  setInt("noiseTexture",2);
 }
 
 /// Find the position of a certain variable in the shader program
@@ -239,7 +239,7 @@ GLuint ShaderProgram::getVariablePosition(const char* name)
     variableLocations[vName] = glGetUniformLocation(ShaderProgramID, name);
   // Die nicely if we need to
   if (variableLocations[vName]==0xFFFFFFFF)
-    loge.log("Cannot find shader variable",name);
+    loge.log("Cannot find shader variable %s",name);
   // Return the answer
   return variableLocations[vName];
 }

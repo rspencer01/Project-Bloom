@@ -1,0 +1,25 @@
+#version 150
+
+in vec4 gsColour;
+in vec2 gsTex;
+in vec3 gsNorm;
+out vec4 FragColor;
+
+layout(shared)uniform frameData
+{
+  mat4x4 transformationMatrix;
+  vec4 cameraPos;
+  mat4x4 projectionMatrix;  
+};
+
+/*
+layout(shared)uniform objectData
+{
+  mat4x4 objectMatrix;
+};*/
+
+void main()
+{
+  float light = 0.6+0.4*max(0,dot(gsNorm,normalize(vec3(1,10,3))));
+  FragColor = vec4(gsColour.xyz*light,1);
+}
