@@ -54,11 +54,11 @@ void main()
   gsColour = vsColour[0];
   EmitVertex();*/
   int count = 0;
-  for (int j = 0; j<5;j++)
-    for (int i = 0; i<6 ;i++)
+  for (float theta = -3.141592/2; theta<= 3.141592/2 ;theta+=3.141592 / (rows-1))
+    for (float phi = 0; phi<2*3.141592;phi+=2*3.141592/(cols))
     {
       vec4 offset = vec4((count%cols)*(2.0/cols)-(2.0/cols)*((cols-1)/2.0 ),(2.0/rows)*((rows-1)/2.0) -(count/cols)*(2.0/rows),0,0);
-      gl_Position = proj *Xrotation(-3.141592/2 + 3.141592 / 4 *  j) * Yrotation(3.141592 * 2 / 6 *  i) *  (vsPosition[0]-vec4(boundingSphere.xyz,0));
+      gl_Position = proj *Xrotation(theta) * Yrotation(phi) *  (vsPosition[0]-vec4(boundingSphere.xyz,0));
       gl_Position += offset;
       gsNorm = vsNorm[0];
       gsColour = vsColour[0];

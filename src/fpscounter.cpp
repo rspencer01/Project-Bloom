@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <log.h>
 #include <glfw3.h>
+#include <math.h>
 
 float fps = 0.0;
 int currentTime;
