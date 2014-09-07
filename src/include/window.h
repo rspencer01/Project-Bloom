@@ -2,7 +2,7 @@
 #define WINDOW_H
 
 #include <glm.hpp>
-#include <gl/glew.h>
+#include <GL/glew.h>
 #include <glfw3.h>
 
 class Game;
