@@ -1,0 +1,69 @@
+#version 150
+
+layout(points) in;
+layout(points,max_vertices=72) out;
+
+in vec4 vsPosition[];
+in vec4 vsColour[];
+in vec3 vsNorm[];
+
+out vec4 gsColour;
+out vec3 gsNorm;
+
+layout(shared)uniform frameData
+{
+  mat4x4 transformationMatrix;
+  vec4 cameraPos;
+  mat4x4 projectionMatrix;  
+};
+
+layout(shared)uniform objectData
+{
+  vec4 boundingSphere;
+};
+
+int rows = 8;
+int cols = 9;
+
+float scale = (1.0/max(rows,cols))/(boundingSphere.w);
+
+mat4 proj = mat4(vec4(scale,0,0,0),vec4(0,scale,0,0),vec4(0,0,0.001,0),vec4(0,0,0,1));
+
+mat4 Yrotation(float theta)
+{
+  return mat4(vec4(cos(theta),0,sin(theta),0),
+              vec4(0,1,0,0),
+              vec4(-sin(theta),0,cos(theta),0),
+              vec4(0,0,0,1));
+}
+
+mat4 Xrotation(float theta)
+{
+  return mat4(vec4(1,0,0,0),
+              vec4(0,cos(theta),sin(theta),0),
+              vec4(0,-sin(theta),cos(theta),0),
+              vec4(0,0,0,1));
+}
+
+
+void main() 
+{
+/*
+  gl_Position = projectionMatrix * transformationMatrix* vsPosition[0];
+  gsNorm = vsNorm[0];
+  gsColour = vsColour[0];
+  EmitVertex();*/
+  int count = 0;
+  for (float theta = -3.141592/2; theta<= 3.141592/2 ;theta+=3.141592 / (rows-1))
+    for (float phi = 0; phi<2*3.141592;phi+=2*3.141592/(cols))
+    {
+      vec4 offset = vec4((count%cols)*(2.0/cols)-(2.0/cols)*((cols-1)/2.0 ),(2.0/rows)*((rows-1)/2.0) -(count/cols)*(2.0/rows),0,0);
+      gl_Position = proj *Xrotation(theta) * Yrotation(phi) *  (vsPosition[0]-vec4(boundingSphere.xyz,0));
+      gl_Position += offset;
+      gsNorm = vsNorm[0];
+      gsColour = vsColour[0];
+      EmitVertex();
+      count++;
+    }
+  EndPrimitive();
+}

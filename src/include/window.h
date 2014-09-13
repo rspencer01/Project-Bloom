@@ -45,6 +45,7 @@ class Window
     void setMousePos(glm::vec2);
     /// Moves the mouse to the middle of the window
     void setMouseCentre();
-
+    /// Sets the OpenGL viewport to the size of the window
+    void setViewport();
 };
 #endif

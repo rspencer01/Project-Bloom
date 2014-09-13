@@ -1,7 +1,7 @@
 #version 150
 
 layout(points) in;
-layout(points,max_vertices=30) out;
+layout(triangle_strip,max_vertices=30) out;
 
 in vec4 vsPosition[];
 in vec4 vsColour[];
@@ -9,6 +9,7 @@ in vec3 vsNorm[];
 
 out vec4 gsColour;
 out vec3 gsNorm;
+out vec2 gsTex;
 
 layout(shared)uniform frameData
 {
@@ -22,8 +23,8 @@ layout(shared)uniform objectData
   vec4 boundingSphere;
 };
 
-int rows = 5;
-int cols = 6;
+int rows = 8;
+int cols = 9;
 
 float scale = (1.0/max(rows,cols))/(boundingSphere.w);
 
@@ -45,25 +46,36 @@ mat4 Xrotation(float theta)
               vec4(0,0,0,1));
 }
 
-
+uniform sampler2D LODTexture;
 void main() 
 {
-/*
-  gl_Position = projectionMatrix * transformationMatrix* vsPosition[0];
+  float theta = 3.141592-acos((cameraPos.y-boundingSphere.y)/length(cameraPos.xyz-boundingSphere.xyz));
+  float phi = 3.141592/2.0+atan(cameraPos.z-boundingSphere.z,cameraPos.x-boundingSphere.x) + (3.141592)/cols;
+  phi = phi-mod(phi,2*3.141592/cols);
+  int row = int(floor(theta/(3.141592/(rows))));
+  int col = int(floor(phi/(2*3.141592/(cols))));
+
   gsNorm = vsNorm[0];
-  gsColour = vsColour[0];
+  gsColour = vec4(vec3(1),1);
+  
+  vec4 ps = Yrotation( phi ) * Xrotation(row * (3.141592/(rows) ) -3.141592/2) * vec4(-boundingSphere.w,-boundingSphere.w,0,1);
+  gl_Position = projectionMatrix * transformationMatrix*ps+vec4(boundingSphere.xyz,0);
+  gsTex = vec2(1-float(col)/cols,float(row)/rows);
+  EmitVertex();
+  ps = Yrotation( phi ) * Xrotation(row * (3.141592/(rows) ) -3.141592/2) * vec4(-boundingSphere.w,boundingSphere.w,0,1);
+  gl_Position = projectionMatrix * transformationMatrix*ps+vec4(boundingSphere.xyz,0);
+  gsTex = vec2(1-float(col)/cols,float(row+1)/rows);
+  EmitVertex();
+  ps = Yrotation( phi ) *Xrotation(row * (3.141592/(rows) ) -3.141592/2) *vec4(boundingSphere.w,-boundingSphere.w,0,1);
+  gl_Position = projectionMatrix * transformationMatrix*ps+vec4(boundingSphere.xyz,0);
+  gsTex = vec2(1-float(col+1)/cols,float(row)/rows);
+  EmitVertex();
+  ps = Yrotation( phi ) *Xrotation(row * (3.141592/(rows) ) -3.141592/2) *vec4(boundingSphere.w,boundingSphere.w,0,1);
+  gl_Position = projectionMatrix * transformationMatrix*ps+vec4(boundingSphere.xyz,0);
+  gsTex = vec2(1-float(col+1)/cols,float(row+1)/rows);
+  EmitVertex();
+  
+/*  gl_Position = projectionMatrix * transformationMatrix* vsPosition[0];
   EmitVertex();*/
-  int count = 0;
-  for (float theta = -3.141592/2; theta<= 3.141592/2 ;theta+=3.141592 / (rows-1))
-    for (float phi = 0; phi<2*3.141592;phi+=2*3.141592/(cols))
-    {
-      vec4 offset = vec4((count%cols)*(2.0/cols)-(2.0/cols)*((cols-1)/2.0 ),(2.0/rows)*((rows-1)/2.0) -(count/cols)*(2.0/rows),0,0);
-      gl_Position = proj *Xrotation(theta) * Yrotation(phi) *  (vsPosition[0]-vec4(boundingSphere.xyz,0));
-      gl_Position += offset;
-      gsNorm = vsNorm[0];
-      gsColour = vsColour[0];
-      EmitVertex();
-      count++;
-    }
   EndPrimitive();
 }

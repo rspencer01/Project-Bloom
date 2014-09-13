@@ -25,8 +25,6 @@ class Game
     void initGraphics();
     /// Renders the main window
     void renderMainWindow(float ms);
-    /// The main window;
-    Window* mainWindow;
     /// The main camera
     Camera* camera;
     /// Does the mouse control the camera?
@@ -44,7 +42,10 @@ class Game
     ShaderManager* shaderManager;
     /// A key event log
     void key(int,int,int,int);
+    /// The event for the mouse scroll
     void scroll(double,double);
+    /// The main window;
+    Window* mainWindow;
 };
 
 #endif

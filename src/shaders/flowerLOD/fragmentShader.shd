@@ -19,13 +19,9 @@ layout(shared)uniform objectData
   vec4 boundingSphere;
 };
 
-uniform sampler2D LODTexture;
-
 void main()
 {
   float light = 0.6+0.4*max(0,dot(gsNorm,normalize(vec3(1,10,3))));
-  //FragColor = vec4(gsTex,1,1);
-  FragColor = texture(LODTexture,gsTex);
+  FragColor = vec4(gsColour.xyz*light,1);
  // color = FragColor.xyz;
- //FragColor =gsColour;
 }

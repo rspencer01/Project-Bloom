@@ -8,7 +8,6 @@ class Flower : public Object
 {
   public:
     Flower(Game* parent);
-    void Render();
 };
 
 #endif

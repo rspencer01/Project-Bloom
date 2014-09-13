@@ -20,7 +20,7 @@ layout(shared)uniform objectData
 out vec4 vsPosition;
 out vec4 vsColour;
 out vec3 vsNorm;
-uniform sampler2D LODTexture;
+
 void main()
 {
   vsPosition = /*objectMatrix*/vec4(inPosition.xyz,1);

@@ -32,9 +32,33 @@ Object::Object(glm::vec3 pos,Game* g)
   updateMatrix();
   bboxMin = glm::vec3(100000.f);
   bboxMax = glm::vec3(-100000.f);
+  // Construct the LOD Texture
+  LODTexture = new Texture(LOD_TEXTURE,1024,1024);
+
+  glGenFramebuffers(1, &LODFrameBuffer);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, LODFrameBuffer);
+
+  glGenRenderbuffers(1, &LODDepthBuffer);
+  glBindRenderbuffer(GL_RENDERBUFFER, LODDepthBuffer);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 1024);
+  glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, LODDepthBuffer);
+
+  // Set "renderedTexture" as our colour attachement #0
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, LODTexture->getTextureNumber(), 0);
+ 
+  // Set the list of draw buffers.
+  GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+  glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+
+
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
 /// Frees the data used by this object (esp the buffers in the GPU)
+///
+/// More specifically, destroys the `vertexData`, `triangleData`, `vertexVBO`,
+/// `indexVBO`, `objectBO` and `VAO`.
 Object::~Object()
 {
   if (vertexData!=NULL)
@@ -51,6 +75,8 @@ Object::~Object()
 }
 
 /// Changes the position of the object.
+///
+/// Updates the object matrix as well.
 void Object::setPosition(glm::vec3 pos)
 {
   position = pos;
@@ -75,11 +101,20 @@ void Object::Render()
     // Load our transformation matrix etc
     game->shaderManager->getCurrentShader()->setObjectData(objectBO);
     // Select this object's texture
-//    glBindTexture(GL_TEXTURE_2D,textureNumber);
+    //glBindTexture(GL_TEXTURE_2D,textureNumber);
     // Use our data
-
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES,numberOfTriangles*3,GL_UNSIGNED_INT,0);
+    LODTexture->load();
+    if (true)
+    {
+      glDrawArrays(GL_POINTS,0,1);
+    }
+    else
+    {
+      glDrawArrays(GL_POINTS,0,numberOfPoints);
+    }
+
+    //glDrawElements(GL_TRIANGLES,numberOfTriangles*3,GL_UNSIGNED_INT,0);
   }
 }
 
@@ -261,7 +296,23 @@ void Object::updateObjectBO()
   glBufferData(GL_UNIFORM_BUFFER, sizeof(objectData), &objectData, GL_DYNAMIC_DRAW);
 }
 
+/// The accessor for the object position.
 glm::vec3 Object::getPosition()
 {
   return position;
+}
+
+/// Renders the object to the offscreen LOD texture.
+void Object::RenderLOD()
+{
+  game->shaderManager->loadShader(LODshaderID);
+  // Load our transformation matrix etcqq
+  game->shaderManager->getCurrentShader()->setObjectData(objectBO);
+  glBindVertexArray(VAO);
+  glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER,LODFrameBuffer);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glViewport(0,0,1024,1024);
+  glDrawArrays(GL_POINTS,0,numberOfPoints);
+  glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER,0);
+  game->mainWindow->setContext();
 }

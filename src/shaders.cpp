@@ -227,6 +227,8 @@ void ShaderProgram::Load()
 {
   // Now load this program
   glUseProgram(ShaderProgramID);
+  // Set the uniforms required
+  setInt("LODTexture",3);
 }
 
 /// Find the position of a certain variable in the shader program

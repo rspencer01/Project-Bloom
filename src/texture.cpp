@@ -23,6 +23,7 @@ Texture::Texture(int type, int w, int h)
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA , w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE , NULL);
 }
 
 void Texture::toTGA(const char* file)
@@ -54,6 +55,11 @@ void Texture::toTGA(const char* file)
       putc((unsigned char)(abs(data[(i*height+j)*4+3]*255)),fp);
     }
   fclose(fp);
+}
+
+GLuint Texture::getTextureNumber()
+{
+  return textureNumber;
 }
 
 void Texture::loadData(float* inData)

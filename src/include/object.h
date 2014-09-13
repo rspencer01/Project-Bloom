@@ -102,6 +102,9 @@ class Object
     void pushTriangleData();
     /// Texture number.
     Texture* texture;
+    /// LOD Texture
+    Texture* LODTexture;
+    GLuint LODDepthBuffer,LODFrameBuffer;
     /// Setting uv coordinates
     void editTextureCoord(int, float, float);
     /// Repushes the vertexes to the GPU
@@ -127,6 +130,8 @@ class Object
     /// Update the Vertex Array Object
     void updateVAO();
     int shaderID;
+    int LODshaderID;
+    void RenderLOD();
   public:
 	  /// Constructs the object with the given coordinates and in the given game
     Object(glm::vec3,Game*);

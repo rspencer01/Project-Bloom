@@ -37,6 +37,7 @@ Game::Game()
   logi.log("Initialising Noise...");
   initNoise();
   logi.log("Done");
+  mainWindow->setContext();
   flower = new Flower(this);
   camera->attachment = flower;
   mouseCameraControl = false;
@@ -67,7 +68,7 @@ void Game::initGraphics()
   glPointSize(2);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-  glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+  glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
   shaderManager = new ShaderManager(); 
   camera = new Camera(&shaderManager->frameData.cameraMatrix,&shaderManager->frameData.cameraPosition);

@@ -34,6 +34,12 @@ void Window::setContext()
   glfwGetWindowSize(windowHandle,&width,&height);
   makePerspectiveMatrix(&game->shaderManager->frameData.projectionMatrix,float(width)/height);
   glfwMakeContextCurrent(windowHandle);
+  setViewport();
+}
+
+/// Tells OpenGL to render to the whole of the screen
+void Window::setViewport()
+{
   glViewport(0,0,width,height);
 }
 
@@ -88,6 +94,7 @@ void Window::setMousePos(glm::vec2 p)
   glfwSetCursorPos(windowHandle,p.x,p.y);
 }
 
+/// Sets the mouse to the center of the screen.
 void Window::setMouseCentre()
 {
   setMousePos(glm::vec2(width/2,height/2));
