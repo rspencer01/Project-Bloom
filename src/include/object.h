@@ -44,11 +44,13 @@ typedef struct
 typedef struct
 {
   glm::vec4 boundingSphere;
+  int LODrows;
+  int LODcols;
 } ObjectData;
 
 // Check that the above structs are the right size
 static_assert(sizeof(VertexDatum) == sizeof(GLfloat) * 16, "VertexDatum incorrect size");
-static_assert(sizeof(ObjectData) == sizeof(GLfloat) * (4), "ObjectData incorrect size");
+static_assert(sizeof(ObjectData) == sizeof(GLfloat) * (4)+ sizeof(GLint)*2, "ObjectData incorrect size");
 
 /// \brief An object is anything that occurs in the game space
 ///

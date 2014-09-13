@@ -20,12 +20,14 @@ layout(shared)uniform frameData
 layout(shared)uniform objectData
 {
   vec4 boundingSphere;
+  int LODrows;
+  int LODcols;
 };
 
-int rows = 8;
-int cols = 9;
+uniform int row;
+uniform int column;
 
-float scale = (1.0/max(rows,cols))/(boundingSphere.w);
+float scale = (1.0/max(LODrows,LODcols))/(boundingSphere.w);
 
 mat4 proj = mat4(vec4(scale,0,0,0),vec4(0,scale,0,0),vec4(0,0,0.001,0),vec4(0,0,0,1));
 
@@ -53,17 +55,15 @@ void main()
   gsNorm = vsNorm[0];
   gsColour = vsColour[0];
   EmitVertex();*/
-  int count = 0;
-  for (float theta = -3.141592/2; theta<= 3.141592/2 ;theta+=3.141592 / (rows-1))
-    for (float phi = 0; phi<2*3.141592;phi+=2*3.141592/(cols))
+  float theta = -3.141592/2 + 3.141592*row/(LODrows);
+  float phi = 2*3.141592/LODcols*column;
     {
-      vec4 offset = vec4((count%cols)*(2.0/cols)-(2.0/cols)*((cols-1)/2.0 ),(2.0/rows)*((rows-1)/2.0) -(count/cols)*(2.0/rows),0,0);
+      vec4 offset = vec4((column)*(2.0/LODcols)-(2.0/LODcols)*((LODcols-1)/2.0 ),(2.0/LODrows)*((LODrows-1)/2.0) -(row)*(2.0/LODrows),0,0);
       gl_Position = proj *Xrotation(theta) * Yrotation(phi) *  (vsPosition[0]-vec4(boundingSphere.xyz,0));
       gl_Position += offset;
       gsNorm = vsNorm[0];
       gsColour = vsColour[0];
       EmitVertex();
-      count++;
     }
   EndPrimitive();
 }

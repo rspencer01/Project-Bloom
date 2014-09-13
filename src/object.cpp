@@ -30,6 +30,8 @@ Object::Object(glm::vec3 pos,Game* g)
   glGenBuffers(1, &objectBO);
   VAO = (GLuint)-1;
   updateMatrix();
+  objectData.LODcols = 15;
+  objectData.LODrows = 15;
   bboxMin = glm::vec3(100000.f);
   bboxMax = glm::vec3(-100000.f);
   // Construct the LOD Texture
@@ -305,14 +307,25 @@ glm::vec3 Object::getPosition()
 /// Renders the object to the offscreen LOD texture.
 void Object::RenderLOD()
 {
-  game->shaderManager->loadShader(LODshaderID);
+  
   // Load our transformation matrix etcqq
-  game->shaderManager->getCurrentShader()->setObjectData(objectBO);
+  
   glBindVertexArray(VAO);
+  game->shaderManager->loadShader(LODshaderID);
+  game->shaderManager->getCurrentShader()->setObjectData(objectBO);
   glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER,LODFrameBuffer);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glViewport(0,0,1024,1024);
-  glDrawArrays(GL_POINTS,0,numberOfPoints);
+  for (int i = 0;i<=objectData.LODrows;i++)
+  {
+    for (int j = 0;j<=objectData.LODcols;j++)
+    {
+      game->shaderManager->getCurrentShader()->setInt("row",i);
+      game->shaderManager->getCurrentShader()->setInt("column",j);
+      glDrawArrays(GL_POINTS,0,numberOfPoints);
+    }
+  }
+
   glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER,0);
   game->mainWindow->setContext();
 }

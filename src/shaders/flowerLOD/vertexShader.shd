@@ -12,6 +12,9 @@ layout(shared)uniform frameData
   mat4x4 projectionMatrix;  
 };
 
+uniform int row;
+uniform int column;
+
 layout(shared)uniform objectData
 {
   vec4 boundingSphere;
