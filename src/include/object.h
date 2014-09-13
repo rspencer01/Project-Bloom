@@ -140,7 +140,7 @@ class Object
   	/// Destroys the Object, freeing space
     virtual ~Object();
   	/// Renders the Object to the screen
-    virtual void Render();
+    virtual void Render(glm::vec3);
     /// Get the object position
     glm::vec3 getPosition();
 };

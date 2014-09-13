@@ -50,20 +50,25 @@ mat4 Xrotation(float theta)
 
 void main() 
 {
-/*
-  gl_Position = projectionMatrix * transformationMatrix* vsPosition[0];
-  gsNorm = vsNorm[0];
-  gsColour = vsColour[0];
-  EmitVertex();*/
-  float theta = -3.141592/2 + 3.141592*row/(LODrows);
-  float phi = 2*3.141592/LODcols*column;
-    {
-      vec4 offset = vec4((column)*(2.0/LODcols)-(2.0/LODcols)*((LODcols-1)/2.0 ),(2.0/LODrows)*((LODrows-1)/2.0) -(row)*(2.0/LODrows),0,0);
-      gl_Position = proj *Xrotation(theta) * Yrotation(phi) *  (vsPosition[0]-vec4(boundingSphere.xyz,0));
-      gl_Position += offset;
-      gsNorm = vsNorm[0];
-      gsColour = vsColour[0];
-      EmitVertex();
-    }
+  if (column>-1)
+  {
+    float theta = -3.141592/2 + 3.141592*row/(LODrows);
+    float phi = 2*3.141592/LODcols*column;
+      {
+        vec4 offset = vec4((column)*(2.0/LODcols)-(2.0/LODcols)*((LODcols-1)/2.0 ),(2.0/LODrows)*((LODrows-1)/2.0) -(row)*(2.0/LODrows),0,0);
+        gl_Position = proj *Xrotation(theta) * Yrotation(phi) *  (vsPosition[0]-vec4(boundingSphere.xyz,0));
+        gl_Position += offset;
+        gsNorm = vsNorm[0];
+        gsColour = vsColour[0];
+        EmitVertex();
+      }
+  }
+  else
+  {
+    gl_Position = projectionMatrix * transformationMatrix* vsPosition[0];
+    gsNorm = vsNorm[0];
+    gsColour = vsColour[0];
+    EmitVertex();
+  }
   EndPrimitive();
 }

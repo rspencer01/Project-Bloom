@@ -110,7 +110,7 @@ void Game::renderMainWindow(float ms)
   glClearColor(0.,0.,0.,1.0);
   camera->Render();
   shaderManager->setFrameData();
-  flower->Render();
+  flower->Render(camera->getPosition());
 }
 
 void Game::key(int key, int scancode, int action, int mods)

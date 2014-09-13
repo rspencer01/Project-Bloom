@@ -52,26 +52,26 @@ void main()
   float phi = 3.141592/2.0+atan(cameraPos.z-boundingSphere.z,cameraPos.x-boundingSphere.x) + (3.141592)/LODcols;
   phi = phi-mod(phi,2*3.141592/LODcols);
   int row = int(floor(theta/(3.141592/(LODrows))));
-  int col = int(floor(phi/(2*3.141592/(LODcols))));
+  int col = int(floor(-phi/(2*3.141592/(LODcols))));
 
   gsNorm = vsNorm[0];
   gsColour = vec4(vec3(1),1);
   
-  vec4 ps = Yrotation( phi ) * Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) * vec4(-boundingSphere.w,-boundingSphere.w,0,1);
-  gl_Position = projectionMatrix * transformationMatrix*ps+vec4(boundingSphere.xyz,0);
-  gsTex = vec2(1-float(col)/LODcols,float(row)/LODrows);
+  vec4 ps = Yrotation( phi ) * Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) * vec4(-boundingSphere.w,-boundingSphere.w,0,1)+vec4(boundingSphere.xyz,0);
+  gl_Position = projectionMatrix * transformationMatrix*ps;
+  gsTex = vec2(float(col)/LODcols,float(row)/LODrows);
   EmitVertex();
-  ps = Yrotation( phi ) * Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) * vec4(-boundingSphere.w,boundingSphere.w,0,1);
-  gl_Position = projectionMatrix * transformationMatrix*ps+vec4(boundingSphere.xyz,0);
-  gsTex = vec2(1-float(col)/LODcols,float(row+1)/LODrows);
+  ps = Yrotation( phi ) * Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) * vec4(-boundingSphere.w,boundingSphere.w,0,1)+vec4(boundingSphere.xyz,0);
+  gl_Position = projectionMatrix * transformationMatrix*ps;
+  gsTex = vec2(float(col)/LODcols,float(row+1)/LODrows);
   EmitVertex();
-  ps = Yrotation( phi ) *Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) *vec4(boundingSphere.w,-boundingSphere.w,0,1);
-  gl_Position = projectionMatrix * transformationMatrix*ps+vec4(boundingSphere.xyz,0);
-  gsTex = vec2(1-float(col+1)/LODcols,float(row)/LODrows);
+  ps = Yrotation( phi ) *Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) *vec4(boundingSphere.w,-boundingSphere.w,0,1)+vec4(boundingSphere.xyz,0);
+  gl_Position = projectionMatrix * transformationMatrix*ps;
+  gsTex = vec2(float(col+1)/LODcols,float(row)/LODrows);
   EmitVertex();
-  ps = Yrotation( phi ) *Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) *vec4(boundingSphere.w,boundingSphere.w,0,1);
-  gl_Position = projectionMatrix * transformationMatrix*ps+vec4(boundingSphere.xyz,0);
-  gsTex = vec2(1-float(col+1)/LODcols,float(row+1)/LODrows);
+  ps = Yrotation( phi ) *Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) *vec4(boundingSphere.w,boundingSphere.w,0,1)+vec4(boundingSphere.xyz,0);
+  gl_Position = projectionMatrix * transformationMatrix*ps;
+  gsTex = vec2(float(col+1)/LODcols,float(row+1)/LODrows);
   EmitVertex();
   
 /*  gl_Position = projectionMatrix * transformationMatrix* vsPosition[0];

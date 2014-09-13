@@ -90,7 +90,7 @@ void Object::setPosition(glm::vec3 pos)
 /// functions
 /// @param refreshTime Number of milliseconds since the last rendering
 /// @param cameraPos   Position of the camera in 3-space
-void Object::Render()
+void Object::Render(glm::vec3 cameraPos)
 {
   // Rotate the object if it is a billboard
   if (billboard)
@@ -99,7 +99,16 @@ void Object::Render()
   // Only do something if we have data
 	if (buffersInitialised)
 	{
-    game->shaderManager->loadShader(shaderID);
+    if (glm::length(cameraPos - position)>40)
+    {
+      game->shaderManager->loadShader(shaderID);
+    }
+    else
+    {
+      game->shaderManager->loadShader(LODshaderID);
+      game->shaderManager->getCurrentShader()->setInt("row",-1);
+      game->shaderManager->getCurrentShader()->setInt("column",-1);
+    }
     // Load our transformation matrix etc
     game->shaderManager->getCurrentShader()->setObjectData(objectBO);
     // Select this object's texture
@@ -107,7 +116,7 @@ void Object::Render()
     // Use our data
     glBindVertexArray(VAO);
     LODTexture->load();
-    if (true)
+    if (glm::length(cameraPos - position)>40)
     {
       glDrawArrays(GL_POINTS,0,1);
     }
