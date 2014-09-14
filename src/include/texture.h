@@ -20,6 +20,7 @@ class Texture
     GLuint textureNumber;
   public:
     Texture(int type,int width, int height);
+    ~Texture();
     void toTGA(const char* file);
     void loadData(float* data);
     void loadBumpData(float* data);

@@ -26,6 +26,12 @@ Texture::Texture(int type, int w, int h)
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA , w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE , NULL);
 }
 
+Texture::~Texture()
+{
+  delete[] data;
+  glDeleteTextures(1,&textureNumber);
+}
+
 void Texture::toTGA(const char* file)
 {
   FILE* fp = fopen(file,"wb");

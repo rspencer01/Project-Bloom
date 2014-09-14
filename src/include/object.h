@@ -114,10 +114,6 @@ class Object
     void updateTriangleData();
     /// Loads the object from an .obj file
     void loadFromOBJFile(const char*);
-    /// Mutator for the item position
-    void setPosition(glm::vec3);
-    /// Rotates the object so that it matches the new axis
-    void rotate(glm::vec3,glm::vec3);
     /// The function to populate the above
     void updateMatrix();
     /// Sets a point's mix of textures
@@ -144,6 +140,12 @@ class Object
     virtual void Render(glm::vec3);
     /// Get the object position
     glm::vec3 getPosition();
+    /// Mutator for the item position
+    void setPosition(glm::vec3);
+    /// Creates a new, identical object
+    Object* createInstance();
+    /// Rotates the object so that it matches the new axis
+    void rotate(glm::vec3,glm::vec3);
 };
 
 

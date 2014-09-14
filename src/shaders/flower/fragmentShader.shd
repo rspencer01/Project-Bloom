@@ -27,7 +27,7 @@ uniform sampler2D LODTexture;
 void main()
 {
   float light = 0.6+0.4*max(0,dot(gsNorm,normalize(vec3(1,10,3))));
-  //FragColor = vec4(gsTex,1,1);
+  FragColor = vec4(1);
   FragColor = texture(LODTexture,gsTex);
   if (FragColor.a<0.1)
     discard;

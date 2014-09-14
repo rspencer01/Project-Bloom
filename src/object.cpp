@@ -55,6 +55,7 @@ Object::Object(glm::vec3 pos,Game* g)
 
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
 }
 
 /// Frees the data used by this object (esp the buffers in the GPU)
@@ -99,7 +100,7 @@ void Object::Render(glm::vec3 cameraPos)
   // Only do something if we have data
 	if (buffersInitialised)
 	{
-    if (glm::length(cameraPos - position)>40)
+    if (glm::length(cameraPos - position)>100)
     {
       game->shaderManager->loadShader(shaderID);
     }
@@ -116,7 +117,7 @@ void Object::Render(glm::vec3 cameraPos)
     // Use our data
     glBindVertexArray(VAO);
     LODTexture->load();
-    if (glm::length(cameraPos - position)>40)
+    if (glm::length(cameraPos - position)>100)
     {
       glDrawArrays(GL_POINTS,0,1);
     }
@@ -337,4 +338,24 @@ void Object::RenderLOD()
 
   glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER,0);
   game->mainWindow->setContext();
+}
+
+/// Creates a new object with the same data
+Object* Object::createInstance()
+{
+  Object* ret = new Object(position,game);
+  ret->VAO = VAO;
+  //ret->LODTexture->~Texture();
+  delete ret->LODTexture;
+  ret->LODTexture = LODTexture;
+  ret->texture = texture;
+  ret->buffersInitialised = buffersInitialised;
+  ret->shaderID = shaderID;
+  ret->LODshaderID = LODshaderID;
+  ret->objectData = objectData;
+  ret->numberOfPoints = numberOfPoints;
+  ret->numberOfTriangles = numberOfTriangles;
+  glDeleteFramebuffers(1,&ret->LODFrameBuffer);
+  glDeleteRenderbuffers(1,&ret->LODDepthBuffer);
+  return ret;
 }

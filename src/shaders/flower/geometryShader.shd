@@ -49,8 +49,9 @@ mat4 Xrotation(float theta)
 uniform sampler2D LODTexture;
 void main() 
 {
-  float theta = 3.141592-acos((cameraPos.y-boundingSphere.y)/length(cameraPos.xyz-boundingSphere.xyz));
-  float phi = 3.141592/2.0+atan(cameraPos.z-boundingSphere.z,cameraPos.x-boundingSphere.x) + (3.141592)/LODcols;
+  vec3 relativeCameraPos = (inverse(objectMatrix) * cameraPos).xyz;
+  float theta = 3.141592-acos((relativeCameraPos.y-boundingSphere.y)/length(relativeCameraPos.xyz-boundingSphere.xyz));
+  float phi = 3.141592/2.0+atan(relativeCameraPos.z-boundingSphere.z,relativeCameraPos.x-boundingSphere.x) + (3.141592)/LODcols;
   phi = phi-mod(phi,2*3.141592/LODcols);
   int row = int(floor(theta/(3.141592/(LODrows))));
   int col = int(floor(-phi/(2*3.141592/(LODcols))));
