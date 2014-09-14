@@ -14,7 +14,10 @@ layout(shared)uniform frameData
 
 layout(shared)uniform objectData
 {
+  mat4x4 objectMatrix;
   vec4 boundingSphere;
+  int LODrows;
+  int LODcols;
 };
 
 out vec4 vsPosition;

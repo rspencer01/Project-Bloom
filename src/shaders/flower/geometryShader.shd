@@ -20,6 +20,7 @@ layout(shared)uniform frameData
 
 layout(shared)uniform objectData
 {
+  mat4x4 objectMatrix;
   vec4 boundingSphere;
   int LODrows;
   int LODcols;
@@ -58,19 +59,19 @@ void main()
   gsColour = vec4(vec3(1),1);
   
   vec4 ps = Yrotation( phi ) * Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) * vec4(-boundingSphere.w,-boundingSphere.w,0,1)+vec4(boundingSphere.xyz,0);
-  gl_Position = projectionMatrix * transformationMatrix*ps;
+  gl_Position = projectionMatrix * transformationMatrix*objectMatrix * ps;
   gsTex = vec2(float(col)/LODcols,float(row)/LODrows);
   EmitVertex();
   ps = Yrotation( phi ) * Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) * vec4(-boundingSphere.w,boundingSphere.w,0,1)+vec4(boundingSphere.xyz,0);
-  gl_Position = projectionMatrix * transformationMatrix*ps;
+  gl_Position = projectionMatrix * transformationMatrix * objectMatrix * ps;
   gsTex = vec2(float(col)/LODcols,float(row+1)/LODrows);
   EmitVertex();
   ps = Yrotation( phi ) *Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) *vec4(boundingSphere.w,-boundingSphere.w,0,1)+vec4(boundingSphere.xyz,0);
-  gl_Position = projectionMatrix * transformationMatrix*ps;
+  gl_Position = projectionMatrix * transformationMatrix*objectMatrix * ps;
   gsTex = vec2(float(col+1)/LODcols,float(row)/LODrows);
   EmitVertex();
   ps = Yrotation( phi ) *Xrotation(row * (3.141592/(LODrows) ) -3.141592/2) *vec4(boundingSphere.w,boundingSphere.w,0,1)+vec4(boundingSphere.xyz,0);
-  gl_Position = projectionMatrix * transformationMatrix*ps;
+  gl_Position = projectionMatrix * transformationMatrix*objectMatrix * ps;
   gsTex = vec2(float(col+1)/LODcols,float(row+1)/LODrows);
   EmitVertex();
   

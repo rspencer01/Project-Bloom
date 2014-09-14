@@ -7,7 +7,7 @@
 class Flower : public Object
 {
   public:
-    Flower(Game* parent);
+    Flower(Game* parent,glm::vec3);
 };
 
 #endif

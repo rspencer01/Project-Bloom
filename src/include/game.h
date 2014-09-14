@@ -32,7 +32,7 @@ class Game
     /// Which keys are down
     bool keys[256];
     /// A sample flower
-    Flower* flower;
+    Flower* flowers[100];
   public:
     /// Creates a game instance and initialises all variables.
     Game();

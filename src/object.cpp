@@ -30,8 +30,8 @@ Object::Object(glm::vec3 pos,Game* g)
   glGenBuffers(1, &objectBO);
   VAO = (GLuint)-1;
   updateMatrix();
-  objectData.LODcols = 15;
-  objectData.LODrows = 15;
+  objectData.LODcols = 20;
+  objectData.LODrows = 20;
   bboxMin = glm::vec3(100000.f);
   bboxMax = glm::vec3(-100000.f);
   // Construct the LOD Texture
@@ -275,10 +275,10 @@ void Object::rotate(glm::vec3 basisX,glm::vec3 basisY)
 void Object::updateMatrix()
 {
   // This works.  You can check it yourself.
-  /*objectData.transformMatrix = glm::mat4(glm::vec4(forward,0),
+  objectData.objectMatrix = glm::mat4(glm::vec4(forward,0),
                                          glm::vec4(up,0) + glm::vec4(xySlew,0,0,0),
                                          glm::vec4(right,0),
-                                         glm::vec4(position,1));*/
+                                         glm::vec4(position,1));
   updateObjectBO();
 }
 

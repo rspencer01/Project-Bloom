@@ -38,8 +38,9 @@ Game::Game()
   initNoise();
   logi.log("Done");
   mainWindow->setContext();
-  flower = new Flower(this);
-  camera->attachment = flower;
+  for (int i=0;i<2;i++)
+    flowers[i] = new Flower(this,glm::vec3(i*30,0,0));
+  camera->attachment = flowers[0];
   mouseCameraControl = false;
   currentGame = this;
   for (int i = 0;i<256;i++)keys[i] =false;
@@ -110,7 +111,8 @@ void Game::renderMainWindow(float ms)
   glClearColor(0.,0.,0.,1.0);
   camera->Render();
   shaderManager->setFrameData();
-  flower->Render(camera->getPosition());
+  for (int i = 0;i<2;i++)
+    flowers[i]->Render(camera->getPosition());
 }
 
 void Game::key(int key, int scancode, int action, int mods)

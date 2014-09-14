@@ -4,7 +4,8 @@
 #include <game.h>
 #include <images.h>
 int sz=800;
-Flower::Flower(Game* parent) : Object(glm::vec3(0),parent)
+
+Flower::Flower(Game* parent,glm::vec3 pos) : Object(pos,parent)
 {
   LODshaderID = game->shaderManager->newShader("flowerLOD",VERTEX_SHADER|GEOMETRY_SHADER|FRAGMENT_SHADER);
   shaderID = game->shaderManager->newShader("flower",VERTEX_SHADER|GEOMETRY_SHADER|FRAGMENT_SHADER);

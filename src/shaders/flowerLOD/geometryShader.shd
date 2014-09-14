@@ -19,6 +19,7 @@ layout(shared)uniform frameData
 
 layout(shared)uniform objectData
 {
+  mat4x4 objectMatrix;
   vec4 boundingSphere;
   int LODrows;
   int LODcols;
@@ -65,7 +66,7 @@ void main()
   }
   else
   {
-    gl_Position = projectionMatrix * transformationMatrix* vsPosition[0];
+    gl_Position = projectionMatrix * transformationMatrix* objectMatrix * vsPosition[0];
     gsNorm = vsNorm[0];
     gsColour = vsColour[0];
     EmitVertex();
