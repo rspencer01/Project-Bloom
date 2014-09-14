@@ -29,7 +29,7 @@ out vec3 vsNorm;
 
 void main()
 {
-  vsPosition = /*objectMatrix*/vec4(inPosition.xyz,1);
+  vsPosition = vec4(inPosition.xyz,1);
   vsColour = inColour;
   vsNorm = inNorm;
 }

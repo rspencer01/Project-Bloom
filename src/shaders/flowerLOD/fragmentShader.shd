@@ -29,5 +29,6 @@ void main()
 {
   float light = 0.6+0.4*max(0,dot(gsNorm,normalize(vec3(1,10,3))));
   FragColor = vec4(gsColour.xyz*light,1);
+  //FragColor = vec4(1);
  // color = FragColor.xyz;
 }

@@ -1,7 +1,7 @@
 #version 150
 
-layout(points) in;
-layout(points,max_vertices=72) out;
+layout(triangles) in;
+layout(triangle_strip,max_vertices = 8) out;
 
 in vec4 vsPosition[];
 in vec4 vsColour[];
@@ -51,25 +51,29 @@ mat4 Xrotation(float theta)
 
 void main() 
 {
-  if (column>-1)
+  int i;
+  for (i = 0;i<3;i++)
   {
-    float theta = -3.141592/2 + 3.141592*row/(LODrows);
-    float phi = 2*3.141592/LODcols*column;
-      {
-        vec4 offset = vec4((column)*(2.0/LODcols)-(2.0/LODcols)*((LODcols-1)/2.0 ),(2.0/LODrows)*((LODrows-1)/2.0) -(row)*(2.0/LODrows),0,0);
-        gl_Position = proj *Xrotation(theta) * Yrotation(phi) *  (vsPosition[0]-vec4(boundingSphere.xyz,0));
-        gl_Position += offset;
-        gsNorm = vsNorm[0];
-        gsColour = vsColour[0];
-        EmitVertex();
-      }
-  }
-  else
-  {
-    gl_Position = projectionMatrix * transformationMatrix* objectMatrix * vsPosition[0];
-    gsNorm = vsNorm[0];
-    gsColour = vsColour[0];
-    EmitVertex();
+    if (column>-1)
+    {
+      float theta = -3.141592/2 + 3.141592*row/(LODrows);
+      float phi = 2*3.141592/LODcols*column;
+        {
+          vec4 offset = vec4((column)*(2.0/LODcols)-(2.0/LODcols)*((LODcols-1)/2.0 ),(2.0/LODrows)*((LODrows-1)/2.0) -(row)*(2.0/LODrows),0,0);
+          gl_Position = proj *Xrotation(theta) * Yrotation(phi) *  (vsPosition[i]-vec4(boundingSphere.xyz,0));
+          gl_Position += offset;
+          gsNorm = vsNorm[i];
+          gsColour = vsColour[i];
+          EmitVertex();
+        }
+    }
+    else
+    {
+      gl_Position = projectionMatrix * transformationMatrix* objectMatrix * vsPosition[i];
+      gsNorm = vsNorm[i];
+      gsColour = vsColour[i];
+      EmitVertex();
+    }
   }
   EndPrimitive();
 }

@@ -123,10 +123,9 @@ void Object::Render(glm::vec3 cameraPos)
     }
     else
     {
-      glDrawArrays(GL_POINTS,0,numberOfPoints);
+      glDrawElements(GL_TRIANGLES,numberOfTriangles*3,GL_UNSIGNED_INT,0);
     }
 
-    //glDrawElements(GL_TRIANGLES,numberOfTriangles*3,GL_UNSIGNED_INT,0);
   }
 }
 
@@ -213,11 +212,13 @@ void Object::pushTriangleData()
 	glBindBufferARB(GL_ARRAY_BUFFER, vertexVBO);
 	// ... and blit the data in.
 	glBufferDataARB(GL_ARRAY_BUFFER, numberOfPoints*sizeof(VertexDatum),vertexData,GL_STATIC_DRAW);
+  
 
 	// set it as the current one,
 	glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
 	// ... and blit the data in.
   glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER, numberOfTriangles*3*sizeof(int),triDat,GL_STATIC_DRAW);
+  logw.log("%d",indexVBO);
   updateVAO();
 	// Set the variables that need setting
 	buffersInitialised = true;
@@ -332,7 +333,7 @@ void Object::RenderLOD()
     {
       game->shaderManager->getCurrentShader()->setInt("row",i);
       game->shaderManager->getCurrentShader()->setInt("column",j);
-      glDrawArrays(GL_POINTS,0,numberOfPoints);
+      glDrawElements(GL_TRIANGLES,numberOfTriangles*3,GL_UNSIGNED_INT,0);
     }
   }
 
@@ -351,6 +352,8 @@ Object* Object::createInstance()
   ret->texture = texture;
   ret->buffersInitialised = buffersInitialised;
   ret->shaderID = shaderID;
+  ret->indexVBO = indexVBO;
+  ret->vertexVBO = vertexVBO;
   ret->LODshaderID = LODshaderID;
   ret->objectData = objectData;
   ret->numberOfPoints = numberOfPoints;

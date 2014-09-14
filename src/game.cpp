@@ -134,10 +134,12 @@ void Game::key(int key, int scancode, int action, int mods)
     }
     if (key==GLFW_KEY_F5)
       shaderManager->reloadAll();
-    keys[key] = true;
+    if (key<256)
+      keys[key] = true;
   }
   if (action==GLFW_RELEASE)
-    keys[key] = false;
+    if (key<256)
+      keys[key] = false;
 }
 
 void Game::scroll(double xoffset, double yoffset)
